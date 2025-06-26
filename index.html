@@ -401,27 +401,27 @@
       }
 
       cell.addEventListener('click', () => {
-        if (datos[numero]) {
-          alert('⚠️ Este número ya fue reservado.');
-        } else {
-          // --- Pedir nombre y whatsapp ---
-          let nombre = prompt("¿Cuál es tu nombre?");
-          if (!nombre) return;
-          let whatsapp = prompt("¿Cuál es tu número de WhatsApp? (solo números, sin espacios)");
-          if (!whatsapp) return;
+  if (datos[numero]) {
+    alert('⚠️ Este número ya fue reservado.');
+  } else {
+    // Pide nombre y WhatsApp
+    let nombre = prompt("¿Cuál es tu nombre?");
+    if (!nombre) return;
+    let whatsapp = prompt("¿Cuál es tu número de WhatsApp? (solo números, sin +57 ni espacios)");
+    if (!whatsapp) return;
 
-          // Guarda el número con info
-          firebase.database().ref('boletas/' + numero).set({
-            nombre: nombre,
-            whatsapp: whatsapp
-          }).then(() => {
-            // Redirige a WhatsApp
-            const mensaje = `Hola, soy ${nombre} y quiero reservar la boleta número ${numero} para la rifa de pavos.`;
-            const url = `https://wa.me/57${whatsapp}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
-          });
-        }
-      });
+    // Guarda en Firebase con estructura pedida
+    firebase.database().ref('boletas/' + numero).set({
+      nombre: nombre,
+      whatsapp: whatsapp
+    }).then(() => {
+      // Redirige SIEMPRE al encargado, NO al WhatsApp del comprador
+      const mensaje = `Hola, soy ${nombre} y quiero reservar la boleta número ${numero} para la rifa de pavos.`;
+      const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
+      window.open(url, '_blank');
+    });
+  }
+});
 
       grid.appendChild(cell);
     }

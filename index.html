@@ -217,14 +217,25 @@
       .prize { font-size: 1.32rem;}
     }
     @media (max-width: 420px) {
-      .poster { padding: 0.7rem 0.2rem 1.3rem 0.2rem;}
-      .grid { gap: 3px;}
-      .images img { width: 34vw; height: 34vw; min-width: 80px; min-height: 80px;}
-      .prize { font-size: 1rem;}
-      .subtitle { font-size: .97rem;}
-      .info { font-size: .92rem;}
-      .tags span { font-size: .93rem;}
-    }
+  .poster {
+    max-width: 99vw;
+    width: 99vw;
+    margin: 5vw auto;
+    padding: 0.5rem 0.1rem 0.9rem 0.1rem;
+    border-width: 3px;
+  }
+  .grid { gap: 2px; }
+  .images img {
+    width: 38vw;
+    height: 38vw;
+    min-width: 70px;
+    min-height: 70px;
+  }
+  .prize { font-size: 0.96rem; }
+  .subtitle { font-size: .9rem; }
+  .info { font-size: .89rem; padding: 0.7rem 0.4rem 0.8rem;}
+  .tags span { font-size: .89rem; padding: 0.3rem 0.7rem;}
+}
 
     .grid div {
       background: var(--color-num-bg);

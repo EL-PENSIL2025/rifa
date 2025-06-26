@@ -4,12 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rifa de Pavos</title>
-  <!-- Ícono para el manifest -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#d91b1b">
-  <!-- Fuentes Google -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
@@ -275,7 +272,6 @@
       box-shadow: none;
       opacity: 0.78;
     }
-    /* Botones */
     button {
       background: #fbc02d;
       color: #3d2c2c;
@@ -341,8 +337,7 @@
       <span>Gana con solo $9.000</span>
       <span>Elige: festín o efectivo</span>
     </div>
-    <!-- Botones nuevos -->
-    <button id="exportar-csv">🧾 Exportar boletas vendidas</button>
+    <!-- Botón solo para admin -->
     <button id="abrir-panel">🛠 Panel privado</button>
     <div id="panel-admin" style="display:none;">
       <input type="password" id="clave-admin" placeholder="Clave de admin">
@@ -356,7 +351,6 @@
   const grid = document.getElementById('grid-numeros');
   const telefono = "3215096050"; // Tu número sin espacios
 
-  // Escuchar cambios en Firebase para mostrar el tablero actualizado
   firebase.database().ref('boletas').on('value', snapshot => {
     const datos = snapshot.val() || {};
     grid.innerHTML = '';
@@ -384,22 +378,6 @@
     }
   });
 
-  // Exportar CSV de boletas vendidas
-  document.getElementById('exportar-csv').addEventListener('click', () => {
-    firebase.database().ref('boletas').once('value').then(snapshot => {
-      const datos = snapshot.val() || {};
-      const vendidos = Object.keys(datos).filter(n => datos[n]);
-      let csv = "Numero\n" + vendidos.join("\n");
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "boletas_vendidas.csv";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-  });
-
   // Panel privado
   document.getElementById('abrir-panel').onclick = () => {
     document.getElementById('panel-admin').style.display = 'block';
@@ -417,6 +395,8 @@
     firebase.database().ref('boletas').once('value').then(snapshot => {
       const datos = snapshot.val() || {};
       let html = "<h4>Cancelar reservas</h4>";
+      // Botón de exportar dentro del panel solo para admin
+      html += `<button id="exportar-csv-panel">🧾 Exportar boletas vendidas</button>`;
       html += "<ul>";
       for(let n in datos) {
         html += `<li>
@@ -426,9 +406,21 @@
       }
       html += "</ul>";
       document.getElementById('panel-reservas').innerHTML = html;
+
+      // Función para exportar CSV solo visible para admin
+      document.getElementById('exportar-csv-panel').onclick = () => {
+        const vendidos = Object.keys(datos).filter(n => datos[n]);
+        let csv = "Numero\n" + vendidos.join("\n");
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "boletas_vendidas.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      };
     });
   }
-  // Hace que la función esté disponible globalmente
   window.cancelarReserva = function(numero) {
     if(confirm(`¿Seguro de cancelar la reserva del número ${numero}?`)) {
       firebase.database().ref('boletas/' + numero).remove().then(() => {
@@ -437,8 +429,7 @@
       });
     }
   }
-
-  // PWA: registrar el service worker si existe
+  // PWA: registrar el service worker si existe (opcional)
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
   }

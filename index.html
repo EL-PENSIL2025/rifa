@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rifa de Pavos</title>
+  <!-- Ícono para el manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d91b1b">
   <!-- Fuentes Google -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Cargar Firebase compat (usado en tu JS) -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
@@ -42,14 +45,12 @@
       --color-num-vendido: #c62828;
       --color-num-vendido-txt: #fff;
     }
-
     html, body {
       height: 100%;
       width: 100%;
       margin: 0;
       padding: 0;
     }
-
     body {
       min-height: 100vh;
       min-width: 100vw;
@@ -65,7 +66,6 @@
       background: linear-gradient(140deg, #ffd89b 0%, #ff8c7a 60%, #f7b42c 100%), url('https://i.imgur.com/ZQ1iI7L.jpg') no-repeat center center fixed;
       background-size: cover;
     }
-
     .poster {
       width: 100vw;
       height: 100vh;
@@ -85,7 +85,6 @@
       position: relative;
       overflow: auto;
     }
-
     @media (max-width: 420px) {
       .poster {
         padding: 0.7rem 0.1rem 1rem 0.1rem;
@@ -103,12 +102,10 @@
       .info { font-size: .89rem; padding: 0.7rem 0.4rem 0.8rem;}
       .tags span { font-size: .89rem; padding: 0.3rem 0.7rem;}
     }
-
     @keyframes poster-pulse {
       0%, 100% { box-shadow: 0 0 30px var(--color-borde-poster); }
       50% { box-shadow: 0 0 60px var(--color-borde-poster); }
     }
-
     h1.title {
       font-family: 'Fredoka One', cursive;
       font-size: 2.25rem;
@@ -119,12 +116,10 @@
       letter-spacing: 1px;
       user-select: none;
     }
-
     @keyframes bounce {
       0%, 100% { transform: translateY(0);}
       50% { transform: translateY(-10px);}
     }
-
     .images {
       display: flex;
       justify-content: center;
@@ -133,7 +128,6 @@
       margin: 0.5rem 0 1.1rem 0;
       flex-wrap: wrap;
     }
-
     .images img {
       width: 120px;
       height: 120px;
@@ -145,21 +139,17 @@
       background: #fffbe8;
       border: 2px solid #ffe49d;
     }
-
     .images img:hover {
       transform: scale(1.11) rotate(-3deg);
       box-shadow: 0 6px 20px rgba(213, 27, 27, 0.22);
       z-index: 2;
     }
-
     .images img:first-child { animation-delay: 0s; }
     .images img:last-child { animation-delay: 2s; }
-
     @keyframes float-img {
       0%,100% { transform: translateY(0);}
       50% { transform: translateY(-12px);}
     }
-
     .prize {
       text-align: center;
       font-size: 1.18rem;
@@ -175,12 +165,10 @@
       box-shadow: 0 2px 8px #ffe49d4e;
       user-select: none;
     }
-
     @keyframes shine {
       0%, 100% { background-color: var(--color-premio-bg);}
       50% { background-color: var(--color-premio-bg2);}
     }
-
     .subtitle {
       text-align: center;
       font-size: 1.07rem;
@@ -189,7 +177,6 @@
       margin: 0 0 1.3rem 0;
       user-select: none;
     }
-
     .info {
       background: var(--color-info-bg);
       padding: 1.05rem 1rem 1rem;
@@ -213,7 +200,6 @@
       text-align: center;
       display: block;
     }
-
     .tags {
       text-align: center;
       margin-bottom: 1.2rem;
@@ -239,7 +225,6 @@
     }
     .tags span:nth-child(2){ animation-delay:1s; }
     .tags span:nth-child(3){ animation-delay:2s; }
-
     @keyframes wiggle {
       0%,100% { transform: rotate(0);}
       15% { transform: rotate(2.5deg);}
@@ -247,7 +232,6 @@
       65% { transform: rotate(2deg);}
       80% { transform: rotate(-2deg);}
     }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -261,7 +245,6 @@
       .images img { width: 145px; height: 145px;}
       .prize { font-size: 1.32rem;}
     }
-
     .grid div {
       background: var(--color-num-bg);
       border: 1px solid var(--color-num-borde);
@@ -276,14 +259,12 @@
       letter-spacing: 0.5px;
       user-select: none;
     }
-
     .grid div:hover:not(.sold) {
       transform: scale(1.11);
       background: var(--color-num-hover);
       box-shadow: 0 1px 8px #ffe49d85;
       z-index: 1;
     }
-
     .grid div.sold {
       background: var(--color-num-vendido);
       color: var(--color-num-vendido-txt);
@@ -294,20 +275,60 @@
       box-shadow: none;
       opacity: 0.78;
     }
+    /* Botones */
+    button {
+      background: #fbc02d;
+      color: #3d2c2c;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6em 1.4em;
+      margin: 0.2em 0.2em;
+      box-shadow: 0 2px 8px #ffe49d4e;
+      transition: background .15s;
+      cursor: pointer;
+    }
+    button:hover { background: #f57f17; color: #fff; }
+    #panel-admin {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 340px;
+      margin: 1em auto;
+      box-shadow:0 0 12px #0003;
+    }
+    #panel-admin ul {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow: auto;
+    }
+    #panel-admin li {
+      padding: 0.3em 0;
+      border-bottom:1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #panel-admin input[type="password"] {
+      padding: 0.4em 0.7em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      margin-bottom: 0.5em;
+    }
   </style>
 </head>
 <body>
   <div class="poster">
     <h1 class="title">🎉 ¡RIFA DE PAVOS! 🎉</h1>
-
     <div class="images">
       <img src="pavos.jpg.jpg" alt="Pavo grande animado" draggable="false" />
       <img src="billetes.jpg" alt="Billetes de premio" draggable="false" />
     </div>
-
     <div class="prize">⚖️ 1 negro — 1 blanco doble pechuga o 💰 $200.000</div>
     <div class="subtitle">¡Vivos o preparados, tú eliges!</div>
-
     <div class="info">
       <p><strong>🎟️ Boleta:</strong> $9.000</p>
       <p><strong>📞 Encargado:</strong> 321 509 6050</p>
@@ -315,55 +336,112 @@
       <p><strong>🎰 Por las últimas dos cifras de la Lotería de Boyacá</strong></p>
       <span class="warning">⚠️ Boleta sin pagar NO juega</span>
     </div>
-
     <div class="tags">
       <span>¡Cómelo o cóbralo!</span>
       <span>Gana con solo $9.000</span>
       <span>Elige: festín o efectivo</span>
     </div>
-
+    <!-- Botones nuevos -->
+    <button id="exportar-csv">🧾 Exportar boletas vendidas</button>
+    <button id="abrir-panel">🛠 Panel privado</button>
+    <div id="panel-admin" style="display:none;">
+      <input type="password" id="clave-admin" placeholder="Clave de admin">
+      <button id="entrar-admin">Entrar</button>
+      <div id="panel-reservas" style="display:none; margin-top:1rem;"></div>
+    </div>
     <div class="grid" id="grid-numeros"></div>
   </div>
+<script>
+  // Mostrar los números y reservas
+  const grid = document.getElementById('grid-numeros');
+  const telefono = "3215096050"; // Tu número sin espacios
 
-  <script>
-    const grid = document.getElementById('grid-numeros');
-    const telefono = "3215096050"; // Tu número sin espacios
-
-    // Escuchar los cambios en Firebase (carga inicial y tiempo real)
-    firebase.database().ref('boletas').on('value', snapshot => {
-      const datos = snapshot.val() || {};
-      grid.innerHTML = ''; // Limpiar todo antes de volver a dibujar
-
-      for (let i = 0; i < 100; i++) {
-        const numero = i.toString().padStart(2, '0');
-        const cell = document.createElement('div');
-        cell.textContent = numero;
-
+  // Escuchar cambios en Firebase para mostrar el tablero actualizado
+  firebase.database().ref('boletas').on('value', snapshot => {
+    const datos = snapshot.val() || {};
+    grid.innerHTML = '';
+    for (let i = 0; i < 100; i++) {
+      const numero = i.toString().padStart(2, '0');
+      const cell = document.createElement('div');
+      cell.textContent = numero;
+      if (datos[numero]) cell.classList.add('sold');
+      cell.addEventListener('click', () => {
         if (datos[numero]) {
-          // Ya está vendido
-          cell.classList.add('sold');
-        }
-
-        cell.addEventListener('click', () => {
-          if (datos[numero]) {
-            alert('⚠️ Este número ya fue reservado.');
-          } else {
-            const confirmar = confirm(`¿Seguro que quieres elegir la boleta número ${numero}?`);
-            if (confirmar) {
-              // Guardamos el número en Firebase
-              firebase.database().ref('boletas/' + numero).set(true);
-
-              // Redirigimos a WhatsApp con el mensaje
-              const mensaje = `Hola, quiero reservar la boleta número ${numero} para la rifa de pavos. ¿Está disponible aún?`;
-              const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
-              window.open(url, '_blank');
-            }
+          alert('⚠️ Este número ya fue reservado.');
+        } else {
+          const confirmar = confirm(`¿Seguro que quieres elegir la boleta número ${numero}?`);
+          if (confirmar) {
+            // Guardar en Firebase
+            firebase.database().ref('boletas/' + numero).set(true);
+            // Redirigir a WhatsApp
+            const mensaje = `Hola, quiero reservar la boleta número ${numero} para la rifa de pavos. ¿Está disponible aún?`;
+            const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
           }
-        });
+        }
+      });
+      grid.appendChild(cell);
+    }
+  });
 
-        grid.appendChild(cell);
-      }
+  // Exportar CSV de boletas vendidas
+  document.getElementById('exportar-csv').addEventListener('click', () => {
+    firebase.database().ref('boletas').once('value').then(snapshot => {
+      const datos = snapshot.val() || {};
+      const vendidos = Object.keys(datos).filter(n => datos[n]);
+      let csv = "Numero\n" + vendidos.join("\n");
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "boletas_vendidas.csv";
+      a.click();
+      URL.revokeObjectURL(url);
     });
-  </script>
+  });
+
+  // Panel privado
+  document.getElementById('abrir-panel').onclick = () => {
+    document.getElementById('panel-admin').style.display = 'block';
+  };
+  document.getElementById('entrar-admin').onclick = () => {
+    const clave = document.getElementById('clave-admin').value;
+    if(clave === 'admin123') {
+      document.getElementById('panel-reservas').style.display = 'block';
+      cargarPanelReservas();
+    } else {
+      alert('Clave incorrecta');
+    }
+  };
+  function cargarPanelReservas() {
+    firebase.database().ref('boletas').once('value').then(snapshot => {
+      const datos = snapshot.val() || {};
+      let html = "<h4>Cancelar reservas</h4>";
+      html += "<ul>";
+      for(let n in datos) {
+        html += `<li>
+          #${n}
+          <button onclick="cancelarReserva('${n}')">Cancelar</button>
+        </li>`;
+      }
+      html += "</ul>";
+      document.getElementById('panel-reservas').innerHTML = html;
+    });
+  }
+  // Hace que la función esté disponible globalmente
+  window.cancelarReserva = function(numero) {
+    if(confirm(`¿Seguro de cancelar la reserva del número ${numero}?`)) {
+      firebase.database().ref('boletas/' + numero).remove().then(() => {
+        alert('Reserva cancelada');
+        cargarPanelReservas();
+      });
+    }
+  }
+
+  // PWA: registrar el service worker si existe
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
+</script>
 </body>
 </html>

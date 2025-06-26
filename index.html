@@ -4,179 +4,259 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rifa de Pavos</title>
+  <!-- Fuentes Google -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --color-principal: #d91b1b;
+      --color-fondo-poster: rgba(255, 248, 240, 0.95);
+      --color-borde-poster: #d91b1b;
+      --color-shadow-poster: rgba(0,0,0,0.7);
+      --color-premio: #3d2c2c;
+      --color-premio-bg: #ffe49d;
+      --color-premio-bg2: #fff7c2;
+      --color-warning: #c62828;
+      --color-info-bg: #f7e3ca;
+      --color-info-border: #8b0000;
+      --color-hashtag1: #fbc02d;
+      --color-hashtag2: #f57f17;
+      --color-num-bg: #fff;
+      --color-num-borde: #ccc;
+      --color-num-hover: #ffecb3;
+      --color-num-vendido: #c62828;
+      --color-num-vendido-txt: #fff;
+    }
+
+    html, body {
+      height: 100%;
       margin: 0;
-      background: url('https://i.imgur.com/ZQ1iI7L.jpg') no-repeat center center fixed;
-      background-size: cover;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-family: 'Montserrat', sans-serif;
       color: #2b1e1e;
+      background: linear-gradient(140deg, #ffd89b 0%, #ff8c7a 60%, #f7b42c 100%), url('https://i.imgur.com/ZQ1iI7L.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
 
     .poster {
-      max-width: 1000px;
-      margin: 3rem auto;
-      background: rgba(255, 248, 240, 0.95);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 0 30px rgba(0,0,0,0.7);
-      border: 5px dashed #d91b1b;
-      animation: pulse 3s infinite;
+      max-width: 420px;
+      width: 95vw;
+      margin: 2rem auto;
+      background: var(--color-fondo-poster);
+      border-radius: 24px;
+      padding: 1.5rem 1.2rem 2.5rem 1.2rem;
+      box-shadow: 0 0 30px var(--color-shadow-poster);
+      border: 5px dashed var(--color-borde-poster);
+      animation: poster-pulse 3s infinite;
+      position: relative;
+      overflow: hidden;
     }
 
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 30px rgba(217, 27, 27, 0.8); }
-      50% { box-shadow: 0 0 60px rgba(217, 27, 27, 1); }
+    @keyframes poster-pulse {
+      0%, 100% { box-shadow: 0 0 30px var(--color-borde-poster); }
+      50% { box-shadow: 0 0 60px var(--color-borde-poster); }
     }
 
     h1.title {
       font-family: 'Fredoka One', cursive;
-      font-size: 3.5rem;
+      font-size: 2.25rem;
       text-align: center;
-      color: #d91b1b;
+      color: var(--color-principal);
+      margin: 0 0 0.8rem 0;
       animation: bounce 1.5s infinite;
+      letter-spacing: 1px;
+      user-select: none;
     }
 
     @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      0%, 100% { transform: translateY(0);}
+      50% { transform: translateY(-10px);}
     }
 
     .images {
       display: flex;
       justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      margin: 1rem 0;
+      align-items: flex-start;
+      gap: 1.1rem;
+      margin: 0.5rem 0 1.1rem 0;
       flex-wrap: wrap;
     }
 
     .images img {
-      width: 220px;
-      height: auto;
+      width: 120px;
+      height: 120px;
       border-radius: 15px;
       object-fit: cover;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
-      transition: transform 0.3s ease;
-      animation: float 4s ease-in-out infinite;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.16);
+      transition: transform 0.3s cubic-bezier(.24,1.39,.91,-0.19), box-shadow 0.3s;
+      animation: float-img 4s ease-in-out infinite;
+      background: #fffbe8;
+      border: 2px solid #ffe49d;
     }
 
     .images img:hover {
-      transform: scale(1.1) rotate(-2deg);
+      transform: scale(1.11) rotate(-3deg);
+      box-shadow: 0 6px 20px rgba(213, 27, 27, 0.22);
+      z-index: 2;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    .images img:first-child { animation-delay: 0s; }
+    .images img:last-child { animation-delay: 2s; }
+
+    @keyframes float-img {
+      0%,100% { transform: translateY(0);}
+      50% { transform: translateY(-12px);}
     }
 
     .prize {
       text-align: center;
-      font-size: 1.8rem;
-      margin-top: 1rem;
+      font-size: 1.18rem;
+      margin: 0.2rem 0 0.3rem 0;
       font-weight: bold;
-      color: #3d2c2c;
-      background-color: #ffe49d;
-      padding: 0.7rem;
+      color: var(--color-premio);
+      background: var(--color-premio-bg);
+      padding: 0.7rem 0.5rem;
       border-radius: 10px;
       animation: shine 2s infinite;
+      border: 2px solid #f5c96f;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px #ffe49d4e;
+      user-select: none;
     }
 
     @keyframes shine {
-      0%, 100% { background-color: #ffe49d; }
-      50% { background-color: #fff7c2; }
+      0%, 100% { background-color: var(--color-premio-bg);}
+      50% { background-color: var(--color-premio-bg2);}
     }
 
     .subtitle {
       text-align: center;
-      font-size: 1.3rem;
+      font-size: 1.07rem;
       color: #444;
       font-style: italic;
-      margin-bottom: 1.5rem;
+      margin: 0 0 1.3rem 0;
+      user-select: none;
     }
 
     .info {
-      background-color: #f7e3ca;
-      padding: 1.2rem 1.5rem;
+      background: var(--color-info-bg);
+      padding: 1.05rem 1rem 1rem;
       border-radius: 10px;
-      font-size: 1.15rem;
-      border-left: 6px solid #8b0000;
-      margin-bottom: 2rem;
+      font-size: 1.04rem;
+      border-left: 6px solid var(--color-info-border);
+      margin-bottom: 1.25rem;
+      margin-top: 0.4rem;
+      box-shadow: 0 1px 7px #d6bfa54a;
     }
-
-    .info strong {
-      color: #000;
+    .info p {
+      margin: 0.12em 0 0.12em 0;
+      line-height: 1.45;
     }
-
+    .info strong { color: #000; }
     .info .warning {
-      color: red;
+      color: var(--color-warning);
       font-weight: bold;
-      margin-top: 0.5rem;
+      margin-top: .45rem;
+      font-size: 1.02rem;
+      text-align: center;
+      display: block;
     }
 
     .tags {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
+      margin-top: 0.3rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      user-select: none;
     }
-
     .tags span {
       display: inline-block;
-      background: linear-gradient(to right, #fbc02d, #f57f17);
+      background: linear-gradient(85deg, var(--color-hashtag1) 55%, var(--color-hashtag2) 100%);
       color: #000;
-      padding: 0.6rem 1.2rem;
-      margin: 0.3rem;
-      border-radius: 20px;
+      padding: 0.38rem 1.05rem;
+      margin: 0.1rem 0.17rem;
+      border-radius: 18px;
       font-weight: bold;
-      font-size: 1rem;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      font-size: 1.01rem;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.11);
       animation: wiggle 3s infinite;
+      border: 1.5px solid #ffe49d;
     }
+    .tags span:nth-child(2){ animation-delay:1s; }
+    .tags span:nth-child(3){ animation-delay:2s; }
 
     @keyframes wiggle {
-      0%, 100% { transform: rotate(0); }
-      25% { transform: rotate(2deg); }
-      75% { transform: rotate(-2deg); }
+      0%,100% { transform: rotate(0);}
+      15% { transform: rotate(2.5deg);}
+      40% { transform: rotate(-2.5deg);}
+      65% { transform: rotate(2deg);}
+      80% { transform: rotate(-2deg);}
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 5px;
-      margin-top: 1rem;
+      margin: 1.2rem 0 0 0;
+      user-select: none;
+    }
+    @media (min-width: 550px) {
+      .grid { grid-template-columns: repeat(10, 1fr);}
+      .poster { max-width: 600px;}
+      .images img { width: 145px; height: 145px;}
+      .prize { font-size: 1.32rem;}
+    }
+    @media (max-width: 420px) {
+      .poster { padding: 0.7rem 0.2rem 1.3rem 0.2rem;}
+      .grid { gap: 3px;}
+      .images img { width: 34vw; height: 34vw; min-width: 80px; min-height: 80px;}
+      .prize { font-size: 1rem;}
+      .subtitle { font-size: .97rem;}
+      .info { font-size: .92rem;}
+      .tags span { font-size: .93rem;}
     }
 
     .grid div {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      background: var(--color-num-bg);
+      border: 1px solid var(--color-num-borde);
+      border-radius: 6px;
       text-align: center;
-      padding: 0.4rem;
+      padding: 0.37rem 0.18rem;
       font-weight: bold;
-      font-size: 0.9rem;
-      transition: transform 0.2s;
+      font-size: .97rem;
+      transition: transform 0.17s, box-shadow .18s, background .18s;
       cursor: pointer;
+      box-shadow: 0 1px 2px #c5bfbf23;
+      letter-spacing: 0.5px;
+      user-select: none;
     }
 
-    .grid div:hover {
-      transform: scale(1.1);
-      background: #ffecb3;
+    .grid div:hover:not(.sold) {
+      transform: scale(1.11);
+      background: var(--color-num-hover);
+      box-shadow: 0 1px 8px #ffe49d85;
+      z-index: 1;
     }
 
     .grid div.sold {
-      background: #c62828;
-      color: white;
+      background: var(--color-num-vendido);
+      color: var(--color-num-vendido-txt);
       text-decoration: line-through;
       cursor: not-allowed;
-    }
-
-    @media (max-width: 600px) {
-      .images {
-        flex-direction: column;
-      }
-      .grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
+      border-color: #a11616;
+      font-size: .95rem;
+      box-shadow: none;
+      opacity: 0.78;
     }
   </style>
 </head>
@@ -185,11 +265,11 @@
     <h1 class="title">🎉 ¡RIFA DE PAVOS! 🎉</h1>
 
     <div class="images">
-      <img src="pavos.jpg.jpg" alt="Pavo grande animado">
-      <img src="billetes.jpg" alt="Billetes de premio">
+      <img src="pavos.jpg.jpg" alt="Pavo grande animado" draggable="false" />
+      <img src="billetes.jpg" alt="Billetes de premio" draggable="false" />
     </div>
 
-    <div class="prize">⚖️ 1 NEGRO — 1 BLANCO doble pechuga o 💰 $200.000</div>
+    <div class="prize">⚖️ 1 negro — 1 blanco doble pechuga o 💰 $200.000</div>
     <div class="subtitle">¡Vivos o preparados, tú eliges!</div>
 
     <div class="info">
@@ -197,7 +277,7 @@
       <p><strong>📞 Encargado:</strong> 321 509 6050</p>
       <p><strong>📆 Sorteo:</strong> Sábado 26 de julio de 2025</p>
       <p><strong>🎰 Por las últimas dos cifras de la Lotería de Boyacá</strong></p>
-      <p class="warning">⚠️ Boleta sin pagar NO juega</p>
+      <span class="warning">⚠️ Boleta sin pagar NO juega</span>
     </div>
 
     <div class="tags">
@@ -210,27 +290,32 @@
   </div>
 
   <script>
+    // Grilla de números del 00 al 99
     const grid = document.getElementById('grid-numeros');
 
     for (let i = 0; i < 100; i++) {
       const cell = document.createElement('div');
       cell.textContent = i.toString().padStart(2, '0');
+      cell.title = "Selecciona este número de rifa";
 
-      cell.addEventListener('click', () => {
+      cell.addEventListener('click', function () {
         if (cell.classList.contains('sold')) {
           alert('¡Este número ya está vendido!');
-        } else {
-          const confirmacion = confirm(`¿Deseas elegir el número ${cell.textContent}?`);
-          if (confirmacion) {
-            cell.classList.add('sold');
-            alert(`✅ Número ${cell.textContent} reservado`);
-            // Aquí podrías enviar el número al backend con fetch/AJAX si tuvieras base de datos
-          }
+          return;
+        }
+        const confirmacion = confirm(`¿Deseas elegir el número ${cell.textContent}?`);
+        if (confirmacion) {
+          cell.classList.add('sold');
         }
       });
 
       grid.appendChild(cell);
     }
+
+    // Prevenir arrastrar imágenes para mejor UX en móvil
+    document.querySelectorAll('.images img').forEach(img => {
+      img.addEventListener('dragstart', e => e.preventDefault());
+    });
   </script>
 </body>
 </html>

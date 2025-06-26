@@ -41,6 +41,8 @@
       --color-num-hover: #ffecb3;
       --color-num-vendido: #c62828;
       --color-num-vendido-txt: #fff;
+      --color-num-pagado: #4caf50; /* Color verde para pagado */
+      --color-num-no-pagado: #f44336; /* Color rojo para no pagado */
     }
     html, body {
       height: 100%;
@@ -401,27 +403,28 @@
       }
 
       cell.addEventListener('click', () => {
-  if (datos[numero]) {
-    alert('⚠️ Este número ya fue reservado.');
-  } else {
-    // Pide nombre y WhatsApp
-    let nombre = prompt("¿Cuál es tu nombre?");
-    if (!nombre) return;
-    let whatsapp = prompt("¿Cuál es tu número de WhatsApp? (solo números, sin +57 ni espacios)");
-    if (!whatsapp) return;
+        if (datos[numero]) {
+          alert('⚠️ Este número ya fue reservado.');
+        } else {
+          // Pide nombre y WhatsApp
+          let nombre = prompt("¿Cuál es tu nombre?");
+          if (!nombre) return;
+          let whatsapp = prompt("¿Cuál es tu número de WhatsApp? (solo números, sin +57 ni espacios)");
+          if (!whatsapp) return;
 
-    // Guarda en Firebase con estructura pedida
-    firebase.database().ref('boletas/' + numero).set({
-      nombre: nombre,
-      whatsapp: whatsapp
-    }).then(() => {
-      // Redirige SIEMPRE al encargado, NO al WhatsApp del comprador
-      const mensaje = `Hola, soy ${nombre} y quiero reservar la boleta número ${numero} para la rifa de pavos.`;
-      const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
-      window.open(url, '_blank');
-    });
-  }
-});
+          // Guarda en Firebase con estructura pedida
+          firebase.database().ref('boletas/' + numero).set({
+            nombre: nombre,
+            whatsapp: whatsapp,
+            pagado: false // Por defecto, la boleta no está pagada
+          }).then(() => {
+            // Redirige SIEMPRE al encargado, NO al WhatsApp del comprador
+            const mensaje = `Hola, soy ${nombre} y quiero reservar la boleta número ${numero} para la rifa de pavos.`;
+            const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+          });
+        }
+      });
 
       grid.appendChild(cell);
     }
@@ -439,7 +442,7 @@
     renderGrid(datos);
   });
 
-  // --- Panel privado (tu código admin aquí, igual que antes, sin cambios) ---
+  // --- Panel privado ---
   document.getElementById('abrir-panel').onclick = () => {
     document.getElementById('panel-admin').style.display = 'block';
   };
@@ -459,9 +462,10 @@
       html += `<button id="exportar-csv-panel">🧾 Exportar boletas vendidas</button>`;
       html += "<ul>";
       for(let n in datos) {
-        html += `<li>
+        html += `<li class="${datos[n].pagado ? 'pagado' : 'no-pagado'}">
           #${n}
           <button onclick="cancelarReserva('${n}')">Cancelar</button>
+          <button onclick="togglePago('${n}')">Marcar como ${datos[n].pagado ? 'no pagada' : 'pagada'}</button>
         </li>`;
       }
       html += "</ul>";
@@ -470,8 +474,8 @@
       document.getElementById('exportar-csv-panel').onclick = () => {
         const vendidos = Object.entries(datos)
           .filter(([num, info]) => info)
-          .map(([num, info]) => `${num},${info.nombre || ""},${info.whatsapp || ""}`);
-        let csv = "Numero,Nombre,WhatsApp\n" + vendidos.join("\n");
+          .map(([num, info]) => `${num},${info.nombre || ""},${info.whatsapp || ""},${info.pagado ? 'Pagada' : 'No pagada'}`);
+        let csv = "Numero,Nombre,WhatsApp,Estado\n" + vendidos.join("\n");
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -482,6 +486,7 @@
       };
     });
   }
+  
   window.cancelarReserva = function(numero) {
     if(confirm(`¿Seguro de cancelar la reserva del número ${numero}?`)) {
       firebase.database().ref('boletas/' + numero).remove().then(() => {
@@ -490,6 +495,20 @@
       });
     }
   }
+
+  window.togglePago = function(numero) {
+    firebase.database().ref('boletas/' + numero).once('value').then(snapshot => {
+      const datos = snapshot.val();
+      if (datos) {
+        const nuevoEstado = !datos.pagado;
+        firebase.database().ref('boletas/' + numero).update({ pagado: nuevoEstado }).then(() => {
+          alert(`Boleta #${numero} marcada como ${nuevoEstado ? 'pagada' : 'no pagada'}.`);
+          cargarPanelReservas();
+        });
+      }
+    });
+  }
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
   }

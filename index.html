@@ -9,6 +9,26 @@
   <!-- Cargar Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+   <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAGCeITpRGf9UvdbfdyLTnJTYOcI3LjcIE",
+      authDomain: "rifa-de-pavos.firebaseapp.com",
+      databaseURL: "https://rifa-de-pavos-default-rtdb.firebaseio.com",
+      projectId: "rifa-de-pavos",
+      storageBucket: "rifa-de-pavos.firebasestorage.app",
+      messagingSenderId: "66202574796",
+      appId: "1:66202574796:web:a96ec82332a0d4faadc769"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
   <style>
     :root {
       --color-principal: #d91b1b;

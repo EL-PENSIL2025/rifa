@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../Pictures/imagenes_haskell"
+		},
+		{
+			"name": "ESP32TEST",
+			"path": "../../Documents/PlatformIO/Projects/ESP32TEST"
+		}
+	],
+	"settings": {}
+}

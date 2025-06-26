@@ -335,32 +335,44 @@ body {
   </div>
 
   <script>
-    // Grilla de números del 00 al 99
-    const grid = document.getElementById('grid-numeros');
+  const grid = document.getElementById('grid-numeros');
+  const telefono = "3215096050"; // Tu número sin espacios
+
+  // Escuchar los cambios en Firebase (carga inicial y tiempo real)
+  firebase.database().ref('boletas').on('value', snapshot => {
+    const datos = snapshot.val() || {};
+    grid.innerHTML = ''; // Limpiar todo antes de volver a dibujar
 
     for (let i = 0; i < 100; i++) {
+      const numero = i.toString().padStart(2, '0');
       const cell = document.createElement('div');
-      cell.textContent = i.toString().padStart(2, '0');
-      cell.title = "Selecciona este número de rifa";
+      cell.textContent = numero;
 
-      cell.addEventListener('click', function () {
-        if (cell.classList.contains('sold')) {
-          alert('¡Este número ya está vendido!');
-          return;
-        }
-        const confirmacion = confirm(`¿Deseas elegir el número ${cell.textContent}?`);
-        if (confirmacion) {
-          cell.classList.add('sold');
+      if (datos[numero]) {
+        // Ya está vendido
+        cell.classList.add('sold');
+      }
+
+      cell.addEventListener('click', () => {
+        if (datos[numero]) {
+          alert('⚠️ Este número ya fue reservado.');
+        } else {
+          const confirmar = confirm(`¿Seguro que quieres elegir la boleta número ${numero}?`);
+          if (confirmar) {
+            // Guardamos el número en Firebase
+            firebase.database().ref('boletas/' + numero).set(true);
+
+            // Redirigimos a WhatsApp con el mensaje
+            const mensaje = `Hola, quiero reservar la boleta número ${numero} para la rifa de pavos. ¿Está disponible aún?`;
+            const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+          }
         }
       });
 
       grid.appendChild(cell);
     }
-
-    // Prevenir arrastrar imágenes para mejor UX en móvil
-    document.querySelectorAll('.images img').forEach(img => {
-      img.addEventListener('dragstart', e => e.preventDefault());
-    });
-  </script>
+  });
+</script>
 </body>
 </html>

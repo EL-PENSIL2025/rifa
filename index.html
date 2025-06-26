@@ -6,28 +6,21 @@
   <title>Rifa de Pavos</title>
   <!-- Fuentes Google -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Cargar Firebase -->
+  <!-- Cargar Firebase compat (usado en tu JS) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-
-    // Your web app's Firebase configuration
+  <script>
+    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAGCeITpRGf9UvdbfdyLTnJTYOcI3LjcIE",
       authDomain: "rifa-de-pavos.firebaseapp.com",
       databaseURL: "https://rifa-de-pavos-default-rtdb.firebaseio.com",
       projectId: "rifa-de-pavos",
-      storageBucket: "rifa-de-pavos.firebasestorage.app",
+      storageBucket: "rifa-de-pavos.appspot.com",
       messagingSenderId: "66202574796",
       appId: "1:66202574796:web:a96ec82332a0d4faadc769"
     };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
   </script>
   <style>
     :root {
@@ -51,47 +44,65 @@
     }
 
     html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  font-family: 'Montserrat', sans-serif;
-  color: #2b1e1e;
-  background: linear-gradient(140deg, #ffd89b 0%, #ff8c7a 60%, #f7b42c 100%), url('https://i.imgur.com/ZQ1iI7L.jpg') no-repeat center center fixed;
-  background-size: cover;
-}
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      font-family: 'Montserrat', sans-serif;
+      color: #2b1e1e;
+      background: linear-gradient(140deg, #ffd89b 0%, #ff8c7a 60%, #f7b42c 100%), url('https://i.imgur.com/ZQ1iI7L.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
 
-.poster {
-  width: 100vw;
-  height: 100vh;
-  max-width: 100vw;
-  max-height: 100vh;
-  margin: 0;
-  border-radius: 0;
-  padding: 1.2rem 0.2rem 2rem 0.2rem;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
+    .poster {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      border-radius: 0;
+      padding: 1.2rem 0.2rem 2rem 0.2rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background: var(--color-fondo-poster);
+      border: 5px dashed var(--color-borde-poster);
+      box-shadow: 0 0 30px var(--color-shadow-poster);
+      animation: poster-pulse 3s infinite;
+      position: relative;
+      overflow: auto;
+    }
 
-@media (max-width: 420px) {
-  .poster {
-    padding: 0.7rem 0.1rem 1rem 0.1rem;
-  }
-}
+    @media (max-width: 420px) {
+      .poster {
+        padding: 0.7rem 0.1rem 1rem 0.1rem;
+        border-width: 3px;
+      }
+      .grid { gap: 2px; }
+      .images img {
+        width: 38vw;
+        height: 38vw;
+        min-width: 70px;
+        min-height: 70px;
+      }
+      .prize { font-size: 0.96rem; }
+      .subtitle { font-size: .9rem; }
+      .info { font-size: .89rem; padding: 0.7rem 0.4rem 0.8rem;}
+      .tags span { font-size: .89rem; padding: 0.3rem 0.7rem;}
+    }
 
     @keyframes poster-pulse {
       0%, 100% { box-shadow: 0 0 30px var(--color-borde-poster); }
@@ -250,26 +261,6 @@ body {
       .images img { width: 145px; height: 145px;}
       .prize { font-size: 1.32rem;}
     }
-    @media (max-width: 420px) {
-  .poster {
-    max-width: 99vw;
-    width: 99vw;
-    margin: 5vw auto;
-    padding: 0.5rem 0.1rem 0.9rem 0.1rem;
-    border-width: 3px;
-  }
-  .grid { gap: 2px; }
-  .images img {
-    width: 38vw;
-    height: 38vw;
-    min-width: 70px;
-    min-height: 70px;
-  }
-  .prize { font-size: 0.96rem; }
-  .subtitle { font-size: .9rem; }
-  .info { font-size: .89rem; padding: 0.7rem 0.4rem 0.8rem;}
-  .tags span { font-size: .89rem; padding: 0.3rem 0.7rem;}
-}
 
     .grid div {
       background: var(--color-num-bg);
@@ -335,44 +326,44 @@ body {
   </div>
 
   <script>
-  const grid = document.getElementById('grid-numeros');
-  const telefono = "3215096050"; // Tu número sin espacios
+    const grid = document.getElementById('grid-numeros');
+    const telefono = "3215096050"; // Tu número sin espacios
 
-  // Escuchar los cambios en Firebase (carga inicial y tiempo real)
-  firebase.database().ref('boletas').on('value', snapshot => {
-    const datos = snapshot.val() || {};
-    grid.innerHTML = ''; // Limpiar todo antes de volver a dibujar
+    // Escuchar los cambios en Firebase (carga inicial y tiempo real)
+    firebase.database().ref('boletas').on('value', snapshot => {
+      const datos = snapshot.val() || {};
+      grid.innerHTML = ''; // Limpiar todo antes de volver a dibujar
 
-    for (let i = 0; i < 100; i++) {
-      const numero = i.toString().padStart(2, '0');
-      const cell = document.createElement('div');
-      cell.textContent = numero;
+      for (let i = 0; i < 100; i++) {
+        const numero = i.toString().padStart(2, '0');
+        const cell = document.createElement('div');
+        cell.textContent = numero;
 
-      if (datos[numero]) {
-        // Ya está vendido
-        cell.classList.add('sold');
-      }
-
-      cell.addEventListener('click', () => {
         if (datos[numero]) {
-          alert('⚠️ Este número ya fue reservado.');
-        } else {
-          const confirmar = confirm(`¿Seguro que quieres elegir la boleta número ${numero}?`);
-          if (confirmar) {
-            // Guardamos el número en Firebase
-            firebase.database().ref('boletas/' + numero).set(true);
-
-            // Redirigimos a WhatsApp con el mensaje
-            const mensaje = `Hola, quiero reservar la boleta número ${numero} para la rifa de pavos. ¿Está disponible aún?`;
-            const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
-          }
+          // Ya está vendido
+          cell.classList.add('sold');
         }
-      });
 
-      grid.appendChild(cell);
-    }
-  });
-</script>
+        cell.addEventListener('click', () => {
+          if (datos[numero]) {
+            alert('⚠️ Este número ya fue reservado.');
+          } else {
+            const confirmar = confirm(`¿Seguro que quieres elegir la boleta número ${numero}?`);
+            if (confirmar) {
+              // Guardamos el número en Firebase
+              firebase.database().ref('boletas/' + numero).set(true);
+
+              // Redirigimos a WhatsApp con el mensaje
+              const mensaje = `Hola, quiero reservar la boleta número ${numero} para la rifa de pavos. ¿Está disponible aún?`;
+              const url = `https://wa.me/57${telefono}?text=${encodeURIComponent(mensaje)}`;
+              window.open(url, '_blank');
+            }
+          }
+        });
+
+        grid.appendChild(cell);
+      }
+    });
+  </script>
 </body>
 </html>

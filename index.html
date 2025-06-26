@@ -347,98 +347,152 @@
     <div class="grid" id="grid-numeros"></div>
   </div>
 <script>
-// --- Referencias ---
-const grid = document.getElementById('grid-numeros');
-const poster = document.querySelector('.poster');
+  // Mostrar los números y reservas
+  const grid = document.getElementById('grid-numeros');
+  const telefono = "3215096050"; // Tu número sin espacios
+  const poster = document.querySelector('.poster');
 
-// --- Elementos para contador y barra ---
-const contador = document.createElement('div');
-contador.id = 'contador-vendidas';
-contador.style.fontWeight = 'bold';
-contador.style.textAlign = 'center';
-contador.style.fontSize = '1.1em';
-contador.style.margin = '1em 0 0.3em 0';
+  // --- 1. Barra de progreso y contador ---
+  // Crea elementos para la barra y el contador
+  let barraContenedor = document.createElement('div');
+  barraContenedor.id = 'progreso-rifa-barra-contenedor';
+  barraContenedor.style.width = '100%';
+  barraContenedor.style.background = '#f3e4c6';
+  barraContenedor.style.borderRadius = '10px';
+  barraContenedor.style.margin = '0.7em 0 0.4em 0';
+  barraContenedor.style.overflow = 'hidden';
+  barraContenedor.style.boxShadow = '0 2px 8px #ffe49d4e';
+  barraContenedor.style.height = '24px';
+  barraContenedor.style.position = 'relative';
 
-const barraContenedor = document.createElement('div');
-barraContenedor.style.width = '100%';
-barraContenedor.style.background = '#f9f3e5';
-barraContenedor.style.borderRadius = '14px';
-barraContenedor.style.overflow = 'hidden';
-barraContenedor.style.height = '22px';
-barraContenedor.style.margin = '0 0 1em 0';
-barraContenedor.style.boxShadow = '0 2px 8px #ffe49d4e';
+  let barra = document.createElement('div');
+  barra.id = 'progreso-rifa-barra';
+  barra.style.height = '100%';
+  barra.style.width = '0%';
+  barra.style.background = 'linear-gradient(90deg, #ffd600 0%, #d91b1b 100%)';
+  barra.style.transition = 'width 0.7s cubic-bezier(.4,1.2,.4,1)';
+  barraContenedor.appendChild(barra);
 
-const barra = document.createElement('div');
-barra.style.height = '100%';
-barra.style.width = '0%';
-barra.style.background = 'linear-gradient(90deg, #ffe082 0%, #d91b1b 100%)';
-barra.style.transition = 'width 0.5s ease-in-out';
+  let contador = document.createElement('div');
+  contador.id = 'progreso-rifa-contador';
+  contador.style.textAlign = 'center';
+  contador.style.fontWeight = 'bold';
+  contador.style.marginBottom = '0.5em';
+  contador.style.fontSize = '1.1em';
 
-barraContenedor.appendChild(barra);
+  // Inserta el contador y la barra al principio del poster
+  poster.insertBefore(contador, poster.children[poster.children.length - 1]);
+  poster.insertBefore(barraContenedor, poster.children[poster.children.length - 1]);
 
-// --- Insertar contador y barra antes de la grilla ---
-poster.insertBefore(contador, grid);
-poster.insertBefore(barraContenedor, grid);
+  // --- 2. Mostrar la grilla y manejar reservas ---
+  function renderGrid(datos) {
+    grid.innerHTML = '';
+    let vendidos = 0;
+    for (let i = 0; i < 100; i++) {
+      const numero = i.toString().padStart(2, '0');
+      const cell = document.createElement('div');
+      cell.textContent = numero;
 
-// --- Función para renderizar la grilla y actualizar contador/barra ---
-function renderGrid(datos) {
-  grid.innerHTML = '';
-  let vendidos = 0;
-  for (let i = 0; i < 100; i++) {
-    const numero = i.toString().padStart(2, '0');
-    const cell = document.createElement('div');
-    cell.textContent = numero;
-
-    // Si está vendido, agrega clase y tooltip con el nombre
-    if (datos[numero]) {
-      cell.classList.add('sold');
-      if (datos[numero].nombre) {
-        cell.title = `Reservado por: ${datos[numero].nombre}`;
-      } else {
-        cell.title = 'Reservado';
+      // Si ya está vendido, pon info extra y tooltip (nombre)
+      if (datos[numero]) {
+        cell.classList.add('sold');
+        cell.title = datos[numero].nombre ? "Reservado por: " + datos[numero].nombre : "Reservado";
+        vendidos++;
       }
-      vendidos++;
+
+      cell.addEventListener('click', () => {
+        if (datos[numero]) {
+          alert('⚠️ Este número ya fue reservado.');
+        } else {
+          // --- Pedir nombre y whatsapp ---
+          let nombre = prompt("¿Cuál es tu nombre?");
+          if (!nombre) return;
+          let whatsapp = prompt("¿Cuál es tu número de WhatsApp? (solo números, sin espacios)");
+          if (!whatsapp) return;
+
+          // Guarda el número con info
+          firebase.database().ref('boletas/' + numero).set({
+            nombre: nombre,
+            whatsapp: whatsapp
+          }).then(() => {
+            // Redirige a WhatsApp
+            const mensaje = `Hola, soy ${nombre} y quiero reservar la boleta número ${numero} para la rifa de pavos.`;
+            const url = `https://wa.me/57${whatsapp}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+          });
+        }
+      });
+
+      grid.appendChild(cell);
     }
 
-    // Click sobre cada número
-    cell.addEventListener('click', () => {
-      if (datos[numero]) {
-        alert('⚠️ Este número ya fue reservado.');
-      } else {
-        // Pide nombre y WhatsApp
-        let nombre = prompt("¿Cuál es tu nombre?");
-        if (!nombre) return;
-        let whatsapp = prompt("¿Cuál es tu número de WhatsApp? (solo números, sin +57 ni espacios)");
-        if (!whatsapp) return;
-
-        // Guarda en Firebase con estructura pedida
-        firebase.database().ref('boletas/' + numero).set({
-          nombre: nombre,
-          whatsapp: whatsapp
-        }).then(() => {
-          // Redirige a WhatsApp
-          const mensaje = `Hola, soy ${nombre} y quiero reservar la boleta número ${numero} para la rifa de pavos.`;
-          const url = `https://wa.me/57${whatsapp}?text=${encodeURIComponent(mensaje)}`;
-          window.open(url, '_blank');
-        });
-      }
-    });
-
-    grid.appendChild(cell);
+    // --- Actualiza barra y contador ---
+    contador.textContent = `🎟️ Vendidas: ${vendidos} / 100`;
+    let porcentaje = Math.round((vendidos / 100) * 100);
+    barra.style.width = porcentaje + "%";
+    barra.title = `${porcentaje}% vendido`;
   }
-  // Actualiza contador
-  contador.textContent = `🎟️ Vendidas: ${vendidos} / 100`;
-  // Actualiza barra animada de progreso
-  const porcentaje = Math.round((vendidos / 100) * 100);
-  barra.style.width = porcentaje + '%';
-  barra.title = porcentaje + '% vendido';
-}
 
-// --- Escuchar cambios en Firebase y actualizar todo en tiempo real ---
-firebase.database().ref('boletas').on('value', snapshot => {
-  const datos = snapshot.val() || {};
-  renderGrid(datos);
-});
+  // Escuchar cambios en Firebase para actualizar la grilla, barra y contador
+  firebase.database().ref('boletas').on('value', snapshot => {
+    const datos = snapshot.val() || {};
+    renderGrid(datos);
+  });
+
+  // --- Panel privado (tu código admin aquí, igual que antes, sin cambios) ---
+  document.getElementById('abrir-panel').onclick = () => {
+    document.getElementById('panel-admin').style.display = 'block';
+  };
+  document.getElementById('entrar-admin').onclick = () => {
+    const clave = document.getElementById('clave-admin').value;
+    if(clave === 'admin123') {
+      document.getElementById('panel-reservas').style.display = 'block';
+      cargarPanelReservas();
+    } else {
+      alert('Clave incorrecta');
+    }
+  };
+  function cargarPanelReservas() {
+    firebase.database().ref('boletas').once('value').then(snapshot => {
+      const datos = snapshot.val() || {};
+      let html = "<h4>Cancelar reservas</h4>";
+      html += `<button id="exportar-csv-panel">🧾 Exportar boletas vendidas</button>`;
+      html += "<ul>";
+      for(let n in datos) {
+        html += `<li>
+          #${n}
+          <button onclick="cancelarReserva('${n}')">Cancelar</button>
+        </li>`;
+      }
+      html += "</ul>";
+      document.getElementById('panel-reservas').innerHTML = html;
+
+      document.getElementById('exportar-csv-panel').onclick = () => {
+        const vendidos = Object.entries(datos)
+          .filter(([num, info]) => info)
+          .map(([num, info]) => `${num},${info.nombre || ""},${info.whatsapp || ""}`);
+        let csv = "Numero,Nombre,WhatsApp\n" + vendidos.join("\n");
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "boletas_vendidas.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+    });
+  }
+  window.cancelarReserva = function(numero) {
+    if(confirm(`¿Seguro de cancelar la reserva del número ${numero}?`)) {
+      firebase.database().ref('boletas/' + numero).remove().then(() => {
+        alert('Reserva cancelada');
+        cargarPanelReservas();
+      });
+    }
+  }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+  }
 </script>
 </body>
 </html>
